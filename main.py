@@ -1,6 +1,7 @@
 # ------------- Import -------------
 import undetected_chromedriver as uc
-import time,yaml, random
+# from selenium import webdriver as uc
+import time,yaml, random, os
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
@@ -20,14 +21,17 @@ def init():
     driver = uc.Chrome()
 
 
-def add_extension():
+def add_extension(extension_dir='extension'):
     global driver
     options = Options()
+    # Get the absolute path of the extension directory
+    extension_path = os.path.abspath(extension_dir)
     options.add_argument("--disable-notifications")
-    options.add_extension('Extension.crx')
+    options.add_argument(f"--load-extension={extension_path}")
     driver = uc.Chrome(options=options)
     print("Extension Added...")
     print("="*50)
+
 
 
 # ------------------- Opening WebPage ----------------------------------
@@ -42,7 +46,7 @@ def start():
 # ---------------------------- Login User -----------------------------------
 def login(username, password):
     print("Start of LOGIN function")
-    if check_login():
+    if login_check():
         print("Logged In Successfully...")
         print("="*50)
         return 0
