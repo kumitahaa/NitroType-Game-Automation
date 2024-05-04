@@ -23,11 +23,12 @@ def init():
 def add_extension():
     global driver
     options = Options()
-    options.add_extension('Extension.crx')
     options.add_argument("--disable-notifications")
-    driver = uc.Chrome(chrome_options=options)
+    options.add_extension('Extension.crx')
+    driver = uc.Chrome(options=options)
     print("Extension Added...")
     print("="*50)
+
 
 # ------------------- Opening WebPage ----------------------------------
 def start():
@@ -39,7 +40,7 @@ def start():
     print("="*50)
 
 # ---------------------------- Login User -----------------------------------
-def login(username = "kumailtaha_1", password = "kumailtaha"):
+def login(username, password):
     print("Start of LOGIN function")
     if check_login():
         print("Logged In Successfully...")
@@ -69,8 +70,10 @@ def login(username = "kumailtaha_1", password = "kumailtaha"):
                     login(username,password)
             except:
                 print("Couldn't Click Login Btn")
+                login(username,password)
         except:
             print("Couldn't send keys to Fields")
+            login(username,password)
     except:
         print(f"Couldn't Find Login Fields..   :/   :(")
         print("=" * 50)
@@ -78,35 +81,22 @@ def login(username = "kumailtaha_1", password = "kumailtaha"):
     
     print("End of LOGIN function")
 
-# ---------------------------- Check Login -----------------------------------
-def check_login():
-    print("Start of CHECK_LOGIN function")
-    # print("It will take 5 seconds")
-    current_url = driver.current_url
-    if "gar" in current_url:
-    # try:
-    #     race_btn =  WebDriverWait(driver, 1).until(EC.presence_of_element_located((By.XPATH,
-    #     "/html/body/div[1]/div/main/section/div[3]/div[2]/div[3]/div[1]")))
-        print("End of CHECK_LOGIN function")
-        return True
-    else:
-    # except:
-        print("Not Logged In")
-
-    print("End of CHECK_LOGIN function")
-    return False
+    
 
 def login_check():
     print("Start of CHECK_LOGIN function")
-    current_url = driver.current_url
-    if "gar" in current_url:
+    try:
+        race_btn =  WebDriverWait(driver, 2).until(EC.presence_of_element_located((By.XPATH,
+        "/html/body/div[1]/div/main/section/div[3]/div[2]/div[3]/div[1]")))
         print("End of CHECK_LOGIN function")
         return True
-    else:
+    # else:
+    except:
         print("Not Logged In")
 
     print("End of CHECK_LOGIN function")
     return False
+    
         
 
 def check_captcha():
@@ -142,7 +132,24 @@ def play():
     while True:
         # print("While Loop...")
         try:
-            input_field = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH,"/html/body/div/div/main/div/section/div/div[3]/div[1]/div[1]/div[2]/input")))
+            try:
+                popup = WebDriverWait(driver, 1).until(EC.presence_of_element_located((By.XPATH,"/html/body/div[4]/div/div[1]/div")))
+                print("Found Error Popup at race.")
+                print("Starting New Race")
+                if race_count < max_race:
+                    start_race()
+                    continue
+            except:
+                try:
+                    race_result = WebDriverWait(driver, 1).until(EC.presence_of_element_located((By.XPATH,"/html/body/div[1]/div[2]/main/div/section/div/div[1]/div[2]/div[2]/div[1]/div")))
+                    print("Race Results appeared.")
+                    print("Starting New Race")
+                    if race_count < max_race:
+                        start_race()
+                        continue
+                except:
+                    pass
+            input_field = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH,"/html/body/div/div/main/div/section/div/div[3]/div[1]/div[1]/div[2]/input")))
             try:
                 try:
                     text_type = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME,"dash"))).text.split("SITION")[1].strip()
