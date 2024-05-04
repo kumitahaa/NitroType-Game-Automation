@@ -1,0 +1,8 @@
+user: "kumailtaha_1"
+password: "kumailtaha"
+
+
+chunk_size: 7 # Smaller the Chunk size, less the speed
+typing_wait_seconds: 0 # Slows down typing speed (combines with Chunk Size for controlling speed)
+max_race: 5 # Total number of races
+disturb_accuracy: 1 # Scale on how much to disturb accuracy
